@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1 An d'Amour</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #ff6b6b, #ffd93d, #6bcf7f, #4ecdc4);
+            background-size: 400% 400%;
+            animation: gradientShift 8s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 182, 193, 0.1) 0%, transparent 70%);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hearts {
+            font-size: 2rem;
+            color: #ff6b6b;
+            margin-bottom: 20px;
+            animation: heartbeat 2s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .step {
+            display: none;
+            animation: fadeIn 0.8s ease-in-out;
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .question {
+            font-size: 1.3rem;
+            color: #34495e;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        input[type="text"]:focus {
+            border-color: #ff6b6b;
+            box-shadow: 0 0 20px rgba(255, 107, 107, 0.2);
+            transform: scale(1.02);
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+            margin: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        .success {
+            background: rgba(108, 207, 127, 0.2);
+            color: #27ae60;
+            border: 2px solid #6bcf7f;
+        }
+
+        .error {
+            background: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+            border: 2px solid #ff6b6b;
+        }
+
+        .final-message {
+            font-size: 1.4rem;
+            color: #2c3e50;
+            line-height: 1.8;
+            margin-top: 30px;
+        }
+
+        .progress {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b6b, #ffd93d);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .hint {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            margin-top: 10px;
+            font-style: italic;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .question {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="hearts">💕 💖 💕</div>
+            <h1>Un an avec toi 💖</h1>
+            <div class="progress">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            
+            <!-- Étape 1 -->
+            <div class="step active" id="step1">
+                <div class="question">
+                    💝 ANTO!!!!<br> Bienvenue dans notre jeu de piste spécial ! 💝<br><br>
+                    🧋 Pour commencer cette aventure romantique, dis-moi quelle est la boisson responsable de notre belle rencontre ?
+                </div>
+                <div class="input-group">
+                    <input type="text" id="answer1" placeholder="La boisson magique...">
+                    <div class="hint">🧋 Cette délicieuse boisson qui nous a réunis...</div>
+                </div>
+                <button class="btn" onclick="checkAnswer(1)">Valider</button>
+                <div class="message" id="message1"></div>
+            </div>
+
+            <!-- Étape 2 -->
+            <div class="step" id="step2">
+                <div class="question">
+                    🍳 Parfait ! Tu te souviens bien de ce moment magique !<br><br>
+                    📺 Maintenant, quelle émission de cuisine regardons-nous religieusement ensemble ?
+                </div>
+                <div class="input-group">
+                    <input type="text" id="answer2" placeholder="Notre émission préférée...">
+                    <div class="hint">👨‍🍳 Celle qui nous fait rêver de grands plats et de compétition...</div>
+                </div>
+                <button class="btn" onclick="checkAnswer(2)">Valider</button>
+                <div class="message" id="message2"></div>
+            </div>
+
+            <!-- Étape 3 -->
+            <div class="step" id="step3">
+                <div class="question">
+                    🐕 Excellent ! Tu as une mémoire incroyable !<br><br>
+                    🐶 Quel est le prénom de notre premier enfant ?
+                </div>
+                <div class="input-group">
+                    <input type="text" id="answer3" placeholder="Le prénom de notre bébé...">
+                    <div class="hint">🥰 Notre petit bout de chou à quatre pattes...</div>
+                </div>
+                <button class="btn" onclick="checkAnswer(3)">Valider</button>
+                <div class="message" id="message3"></div>
+            </div>
+
+            <!-- Étape 4 -->
+            <div class="step" id="step4">
+                <div class="question">
+                    🌸 Tu es formidable ! Presque au bout de notre parcours !<br><br>
+                    🏞️ Où avons-nous passé notre premier week-end ensemble ?
+                </div>
+                <div class="input-group">
+                    <input type="text" id="answer4" placeholder="Notre première escapade...">
+                    <div class="hint">🎨 Un lieu plein de beauté et de couleurs, comme notre amour...</div>
+                </div>
+                <button class="btn" onclick="checkAnswer(4)">Valider</button>
+                <div class="message" id="message4"></div>
+            </div>
+
+            <!-- Étape finale -->
+            <div class="step" id="final">
+                <div class="hearts">💕 💖 💕 💝 💕 💖 💕</div>
+                <div class="final-message">
+                    <h2>🎉 Félicitations mon amour ! 🎉</h2>
+                    <p>Tu as brillamment réussi notre jeu de piste ! Cette première année avec toi a été la plus belle de ma vie.</p>
+                    <p>Chaque moment partagé, chaque sourire, chaque câlin... tout contribue à rendre notre histoire si spéciale.</p>
+                    <p><strong>Joyeux anniversaire à nous deux ! 💕</strong></p>
+                    <p>Rendez-vous vendredi 18 pour la suite de cette belle journée ! Es-tu libre ? 😉</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Définissez vos réponses ici (à personnaliser)
+        const answers = {
+            1: "bubble tea", // La boisson responsable de votre relation
+            2: "top chef", // L'émission de cuisine
+            3: "gucci", // Le prénom de votre "premier enfant" (chien)
+            4: "giverny" // Votre premier week-end
+        };
+
+        let currentStep = 1;
+        const totalSteps = 4;
+
+        function updateProgress() {
+            const progress = ((currentStep - 1) / totalSteps) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        function checkAnswer(step) {
+            const userAnswer = document.getElementById(`answer${step}`).value.toLowerCase().trim();
+            const correctAnswer = answers[step].toLowerCase();
+            const messageElement = document.getElementById(`message${step}`);
+
+            if (userAnswer === correctAnswer) {
+                messageElement.innerHTML = "✅ Parfait ! C'est exact !";
+                messageElement.className = "message success";
+                
+                setTimeout(() => {
+                    document.getElementById(`step${step}`).classList.remove('active');
+                    currentStep++;
+                    updateProgress();
+                    
+                    if (currentStep <= totalSteps) {
+                        document.getElementById(`step${currentStep}`).classList.add('active');
+                    } else {
+                        document.getElementById('final').classList.add('active');
+                        document.getElementById('progressBar').style.width = '100%';
+                    }
+                }, 1500);
+            } else {
+                messageElement.innerHTML = "❌ Pas tout à fait... Essaie encore !";
+                messageElement.className = "message error";
+                
+                // Petit effet de secousse
+                document.getElementById(`answer${step}`).style.animation = 'shake 0.5s ease-in-out';
+                setTimeout(() => {
+                    document.getElementById(`answer${step}`).style.animation = '';
+                }, 500);
+            }
+        }
+
+        // Animation de secousse pour les mauvaises réponses
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                25% { transform: translateX(-5px); }
+                75% { transform: translateX(5px); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Permettre la validation avec la touche Entrée
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                checkAnswer(currentStep);
+            }
+        });
+
+        // Initialiser la barre de progression
+        updateProgress();
+    </script>
+</body>
+</html>
